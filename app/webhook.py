@@ -2,32 +2,29 @@ import os
 import requests
 import json
 import config
-from fastapi import FastAPI, Request, Response
 from dotenv import load_dotenv
 import uvicorn
 import nest_asyncio
+import flask
+
+app = flask.Flask(__name__)
 
 nest_asyncio.apply()
 
-load_dotenv("creds.env")
-app = FastAPI()
-
-%run "Whatsapp API.ipynb"
-
 WHATSAPP_HOOK_TOKEN = os.environ.get("WHATSAPP_HOOK_TOKEN")
 
-@app.get("/")
+@app.route('/')
 def I_am_alive():
     return "¡Estoy vivo!"
 
-@app.get("/webhook/")
+@app.route("/webhook/", methods=['GET', 'POST'])
 def subscribe(request: Request):
     print("subscribe ha sido llamado")
     if request.query_params.get('hub.verify_token') == WHATSAPP_HOOK_TOKEN:
         return int(request.query_params.get('hub.challenge'))
     return "Authentication failed. Invalid Token."
 
-@app.post("/webhook/")
+@app.route("/webhook/", methods=['GET', 'POST'])
 async def callback(request: Request):
     print("callback ha sido llamado")
     wtsapp_client = WhatsAppClient()
@@ -44,5 +41,5 @@ async def callback(request: Request):
     return {"status": "success"}, 200
 
 
-if __name__ == "__main__":
-    uvicorn.run(app)
+if __name__ == '__main__':
+    app.run()
