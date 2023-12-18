@@ -90,7 +90,7 @@ def I_am_alive():
 @app.get("/webhook/")
 def subscribe(request: Request):
     print("Se ha llamado a subscribe")
-    if resquest.method == "GET":
+    if request.method == "GET":
         if request.query_params.get('hub.verify_token') == WHATSAPP_HOOK_TOKEN:
             return int(request.query_params.get('hub.challenge'))
         return "Authentication failed. Invalid Token."
