@@ -1,8 +1,5 @@
 import os
 import requests
-import json
-import uvicorn
-import nest_asyncio
 import flask
 from app.whatsapp_client import WhatsAppClient
 
