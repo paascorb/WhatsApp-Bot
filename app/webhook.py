@@ -1,8 +1,6 @@
 import os
 import requests
 import json
-import config
-from dotenv import load_dotenv
 import uvicorn
 import nest_asyncio
 import flask
