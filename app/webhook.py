@@ -89,14 +89,14 @@ def I_am_alive():
     return "¡Estoy vivo!"
 
 @app.route("/webhook/", methods=['GET', 'POST'])
-def subscribe(request: Request):
+def subscribe(request):
     print("subscribe ha sido llamado")
     if request.query_params.get('hub.verify_token') == WHATSAPP_HOOK_TOKEN:
         return int(request.query_params.get('hub.challenge'))
     return "Authentication failed. Invalid Token."
 
 @app.route("/webhook/", methods=['GET', 'POST'])
-async def callback(request: Request):
+async def callback(request):
     print("callback ha sido llamado")
     wtsapp_client = WhatsAppWrapper()
     data = await request.json()
