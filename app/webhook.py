@@ -79,23 +79,23 @@ class WhatsAppWrapper:
             "isBase64Encoded": False
         }
 
-app = flask.Flask(__name__)
+app = FastAPI()
 
 WHATSAPP_HOOK_TOKEN = os.environ.get("WHATSAPP_HOOK_TOKEN")
 
-@app.route('/')
+@app.get("/")
 def I_am_alive():
     return "¡Estoy vivo!"
 
-@app.route("/webhook/", methods=['GET', 'POST'])
-def subscribe(request):
+@app.get("/webhook/")
+def subscribe(request: Request):
     print("subscribe ha sido llamado")
     if request.query_params.get('hub.verify_token') == WHATSAPP_HOOK_TOKEN:
         return int(request.query_params.get('hub.challenge'))
     return "Authentication failed. Invalid Token."
 
-@app.route("/webhook/", methods=['GET', 'POST'])
-async def callback(request):
+@app.post("/webhook/")
+async def callback(request: Request):
     print("callback ha sido llamado")
     wtsapp_client = WhatsAppWrapper()
     data = await request.json()
@@ -109,7 +109,3 @@ async def callback(request):
             print ("\nreply is sent to whatsapp cloud:" + str(response))
 
     return {"status": "success"}, 200
-
-
-if __name__ == '__main__':
-    app.run()
