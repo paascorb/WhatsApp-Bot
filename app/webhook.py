@@ -88,7 +88,7 @@ def I_am_alive():
     return "¡Estoy vivo!"
     
 @app.get("/webhook/")
-def subscribe(request: Request):
+async def subscribe(request: Request):
     print(await request.json())
     print("Se ha llamado a subscribe")
     if request.method == "GET":
