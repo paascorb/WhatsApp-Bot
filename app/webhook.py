@@ -1,7 +1,7 @@
 import os
 import requests
 import flask
-from whatsapp_client import WhatsAppWrapper
+from whatsapp_client import *
 
 app = flask.Flask(__name__)
 
