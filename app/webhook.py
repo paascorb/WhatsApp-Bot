@@ -95,7 +95,7 @@ def subscribe(request: Request):
             return int(request.query_params.get('hub.challenge'))
         return "Authentication failed. Invalid Token."
     wtsapp_client = WhatsAppClient()
-    data = await request.json()
+    data = request.json()
     print ("We received " + str(data))
     response = wtsapp_client.process_notification(data)
     if response["statusCode"] == 200:
@@ -112,7 +112,7 @@ def subscribe(request: Request):
 async def process_notifications(request: Request):
     print("Se ha llamado a callback")
     wtsapp_client = WhatsAppClient()
-    data = await request.json()
+    data = request.json()
     print ("We received " + str(data))
     response = wtsapp_client.process_notification(data)
     if response["statusCode"] == 200:
