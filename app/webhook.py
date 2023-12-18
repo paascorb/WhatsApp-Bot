@@ -95,7 +95,7 @@ async def subscribe(request: Request):
         if request.query_params.get('hub.verify_token') == WHATSAPP_HOOK_TOKEN:
             return int(request.query_params.get('hub.challenge'))
         print("Hola2")
-        wtsapp_client = WhatsAppClient()
+        wtsapp_client = WhatsAppWrapper()
         data = await request.json()
         print ("We received " + str(data))
         response = wtsapp_client.process_notification(data)
@@ -114,7 +114,7 @@ async def subscribe(request: Request):
 @app.post("/webhook/")
 async def process_notifications(request: Request):
     print("Se ha llamado a callback")
-    wtsapp_client = WhatsAppClient()
+    wtsapp_client = WhatsAppWrapper()
     data = request.json()
     print ("We received " + str(data))
     response = wtsapp_client.process_notification(data)
