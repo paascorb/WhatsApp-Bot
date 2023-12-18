@@ -89,14 +89,15 @@ def I_am_alive():
     
 @app.get("/webhook/")
 async def subscribe(request: Request):
-    print(await request.json())
     print("Se ha llamado a subscribe")
     if request.method == "GET":
+        print("Hola")
         if request.query_params.get('hub.verify_token') == WHATSAPP_HOOK_TOKEN:
             return int(request.query_params.get('hub.challenge'))
+        print("Hola2")
         return "Authentication failed. Invalid Token."
     wtsapp_client = WhatsAppClient()
-    data = request.json()
+    data = await request.json()
     print ("We received " + str(data))
     response = wtsapp_client.process_notification(data)
     if response["statusCode"] == 200:
