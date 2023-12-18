@@ -1,7 +1,6 @@
 import os
 import requests
 import json
-import config
 
 class WhatsAppWrapper:
 
