@@ -1,7 +1,6 @@
 import os
-import requests
-import flask
-import json
+from fastapi import FastAPI, Request, Response
+from fastapi.encoders import jsonable_encoder
 
 class WhatsAppWrapper:
 
