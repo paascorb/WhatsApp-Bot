@@ -1,7 +1,7 @@
 import os
 import requests
 import flask
-from whatsapp_client import WhatsAppClient
+from whatsapp_client import WhatsAppWrapper
 
 app = flask.Flask(__name__)
 
@@ -23,7 +23,7 @@ def subscribe(request: Request):
 @app.route("/webhook/", methods=['GET', 'POST'])
 async def callback(request: Request):
     print("callback ha sido llamado")
-    wtsapp_client = WhatsAppClient()
+    wtsapp_client = WhatsAppWrapper()
     data = await request.json()
     print ("We received " + str(data))
     response = wtsapp_client.process_notification(data)
