@@ -4,6 +4,7 @@ import json
 import uvicorn
 import nest_asyncio
 import flask
+from app.whatsapp_client import WhatsAppClient
 
 app = flask.Flask(__name__)
 
