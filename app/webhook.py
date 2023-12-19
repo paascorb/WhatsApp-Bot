@@ -45,7 +45,7 @@ def send_message():
 @app.route("/webhook/", methods=["POST", "GET"])
 def webhook_whatsapp():
     """__summary__: Get message from the webhook"""
-
+    print(request)
     if request.method == "GET":
         print("hola")
         if request.args.get('hub.verify_token') == VERIFY_TOKEN:
