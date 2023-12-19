@@ -1,23 +1,25 @@
 import os
 import requests
+
 import json
+
 
 class WhatsAppWrapper:
 
-    API_URL = "https://graph.facebook.com/v18.0/"
-    WHATSAPP_API_TOKEN = os.environ.get("WHATSAPP_API_TOKEN")
-    WHATSAPP_CLOUD_NUMBER_ID = os.environ.get("WHATSAPP_CLOUD_NUMBER_ID")
+    API_URL = "https://graph.facebook.com/v13.0/"
+    API_TOKEN = os.environ.get("WHATSAPP_API_TOKEN")
+    NUMBER_ID = os.environ.get("WHATSAPP_NUMBER_ID")
 
     def __init__(self):
         self.headers = {
-            "Authorization": f"Bearer {self.WHATSAPP_API_TOKEN}",
+            "Authorization": f"Bearer {self.API_TOKEN}",
             "Content-Type": "application/json",
         }
-        self.API_URL = self.API_URL + self.WHATSAPP_CLOUD_NUMBER_ID
+        self.API_URL = self.API_URL + self.NUMBER_ID
 
     def send_template_message(self, template_name, language_code, phone_number):
 
-        payload = {
+        payload = json.dumps({
             "messaging_product": "whatsapp",
             "to": phone_number,
             "type": "template",
@@ -27,60 +29,29 @@ class WhatsAppWrapper:
                     "code": language_code
                 }
             }
-        }
-        print(self.WHATSAPP_API_TOKEN)
-        response = requests.post(f"{self.API_URL}/messages", json=payload,headers=self.headers)
-        print(response)
-        print(response.status_code)
-        print(response.text)
+        })
+
+        response = requests.request("POST", f"{self.API_URL}/messages", headers=self.headers, data=payload)
 
         assert response.status_code == 200, "Error sending message"
+
         return response.status_code
-    
-    def send_text_message(self,message, phone_number):
-        payload = {
-            "messaging_product": 'whatsapp',
-            "to": phone_number,
-            "type": "text",
-            "text": {
-                "preview_url": False,
-                "body": message
-            }
-        }
-        response = requests.post(f"{self.API_URL}/messages", json=payload,headers=self.headers)
-        print(response.status_code)
-        print(response.text)
-        assert response.status_code == 200, "Error sending message"
-        return response.status_code
-    
-    def process_notification(self, data):
-        entries = data["entry"]
-        for entry in entries:
+
+    def process_webhook_notification(self, data):
+        """_summary_: Process webhook notification
+        For the moment, this will return the type of notification
+        """
+
+        response = []
+
+        for entry in data["entry"]:
+
             for change in entry["changes"]:
-                value = change["value"]
-                if value:
-                    if "messages" in value:
-                        for message in value["messages"]:
-                            if message["type"] == "text":
-                                from_no = message["from"]
-                                message_body = message["text"]["body"]
-                                prompt = message_body
-                                print(f"Ack from FastAPI-WtsApp Webhook: {message_body}")
-                                return {
-                                    "statusCode": 200,
-                                    "body": prompt,
-                                    "from_no": from_no,
-                                    "isBase64Encoded": False
-                                }
+                response.append(
+                    {
+                        "type": change["field"],
+                        "from": change["value"]["metadata"]["display_phone_number"],
+                    }
+                )
 
-        return {
-            "statusCode": 403,
-            "body": json.dumps("Unsupported method"),
-            "isBase64Encoded": False
-        }
-
-if __name__ == "__main__":
-    client = WhatsAppWrapper()
-    # send a template message
-    client.send_template_message("saludo", "es_ES", "34684243282")
-    #client.send_text_message("Hola, soy PrevenIA", "34684243282")
+        return response
