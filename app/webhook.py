@@ -47,6 +47,7 @@ def webhook_whatsapp():
     """__summary__: Get message from the webhook"""
 
     if request.method == "GET":
+        print("hola")
         if request.args.get('hub.verify_token') == VERIFY_TOKEN:
             return request.args.get('hub.challenge')
         return "Authentication failed. Invalid Token."
