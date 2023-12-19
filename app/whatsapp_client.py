@@ -6,7 +6,7 @@ import json
 
 class WhatsAppWrapper:
 
-    API_URL = "https://graph.facebook.com/v13.0/"
+    API_URL = "https://graph.facebook.com/v18.0/"
     API_TOKEN = os.environ.get("WHATSAPP_API_TOKEN")
     NUMBER_ID = os.environ.get("WHATSAPP_NUMBER_ID")
 
