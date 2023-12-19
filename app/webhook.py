@@ -52,6 +52,7 @@ def webhook_whatsapp():
             return request.args.get('hub.challenge')
         return "Authentication failed. Invalid Token."
 
+    print(request.method)
     client = WhatsAppWrapper()
 
     client.process_webhook_notification(request.get_json())
